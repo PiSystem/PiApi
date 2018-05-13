@@ -1,0 +1,14 @@
+[
+	{
+		"name": "LibLoader",
+		"type": "plugin",
+		"version": "0.0.2",
+		"url": "https://github.com/MPEServer/LibLoader/releases/download/{VERSION}/LibLoader.jar"
+	},
+	{
+		"name": "Groovy",
+		"type": "lib",
+		"version": "3.0.0-alpha-1",
+		"url": "http://central.maven.org/maven2/org/codehaus/groovy/groovy-all/3.0.0-alpha-1/groovy-all-{VERSION}.jar"
+	}
+]

@@ -1,0 +1,5 @@
+name: PiApi
+main: tech.teslex.pi.Main
+api: ["1.0.0"]
+version: 0.0.1
+softdepend: [LibLoader]
