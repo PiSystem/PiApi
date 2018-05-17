@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DependenciesUtils {
 
-	public static List<PiDependency> loadFromFile(File file) throws IOException {
+	public static List<PiDependency> loadJsonFromFile(File file) throws IOException {
 		Gson gson = new Gson();
 		BufferedReader bf = new BufferedReader(new FileReader(file));
 		return gson.fromJson(bf, new TypeToken<List<PiDependency>>() {
@@ -24,6 +24,18 @@ public class DependenciesUtils {
 	}
 
 	public static void initOne(PiDependency dependency) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+		if (dependency.getType() == PiDType.PLUGIN && PiApi.it.getServer().getPluginManager().getPlugin(dependency.getName()) != null)
+			return;
+		else if (dependency.getType() == PiDType.LIBRARY) {
+			String fileName = dependency.getFileName() != null ? dependency.getFileName() : dependency.getUrl().substring(dependency.getUrl().lastIndexOf('/') + 1, dependency.getUrl().length());
+
+			File x = new File(new File(PiApi.it.getServer().getDataPath() + File.separator + "libraries").getAbsoluteFile() + File.separator + fileName);
+
+			if (x.exists())
+				return;
+		}
+
 		if (dependency.getType() == PiDType.PLUGIN) {
 			File pluginFile = new File(PiApi.it.getServer().getPluginPath() + File.separator);
 
@@ -50,18 +62,6 @@ public class DependenciesUtils {
 
 	public static void initAll() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
 		for (PiDependency dependency : PiApi.getDependencies()) {
-
-			if (dependency.getType() == PiDType.PLUGIN && PiApi.it.getServer().getPluginManager().getPlugin(dependency.getName()) != null)
-				continue;
-			else if (dependency.getType() == PiDType.LIBRARY) {
-				String fileName = dependency.getFileName() != null ? dependency.getFileName() : dependency.getUrl().substring(dependency.getUrl().lastIndexOf('/') + 1, dependency.getUrl().length());
-
-				File x = new File(new File(PiApi.it.getServer().getDataPath() + File.separator + "libraries").getAbsoluteFile() + File.separator + fileName);
-
-				if (x.exists())
-					continue;
-			}
-
 			initOne(dependency);
 		}
 	}

@@ -44,7 +44,7 @@ public class PiApi extends PluginBase {
 
 		try {
 			File file = new File(getServer().getPluginPath() + File.separator + "PiApi" + File.separator + "dependencies.json");
-			PiApi.dependencies = (DependenciesUtils.loadFromFile(file));
+			PiApi.dependencies = (DependenciesUtils.loadJsonFromFile(file));
 			DependenciesUtils.initAll();
 		} catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
