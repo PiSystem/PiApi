@@ -12,16 +12,7 @@ public class PiApi {
 
 	private static List<PiDependency> dependencies = new ArrayList<>();
 
-	private static List<Class> commands = new ArrayList<>();
-
-	public static List<Class> getCommands() {
-		return commands;
-	}
-
 	public static void registerCommands(Class clazz) {
-		commands.add(clazz);
-
-
 		CommandsUtils.init(clazz);
 	}
 
@@ -29,7 +20,7 @@ public class PiApi {
 		return dependencies;
 	}
 
-	public static void setDependencies(List<PiDependency> dependencies) {
+	static void setDependencies(List<PiDependency> dependencies) {
 		PiApi.dependencies = dependencies;
 	}
 }

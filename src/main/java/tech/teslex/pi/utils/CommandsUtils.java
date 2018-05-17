@@ -3,22 +3,12 @@ package tech.teslex.pi.utils;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import tech.teslex.pi.Main;
-import tech.teslex.pi.PiApi;
 import tech.teslex.pi.annotations.PiCommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public class CommandsUtils {
-
-	public static void initAll() {
-		List<Class> cmds = PiApi.getCommands();
-
-		for (Class cmd : cmds) {
-			init(cmd);
-		}
-	}
 
 	public static void init(Class clazz) {
 		for (Method method : clazz.getDeclaredMethods()) {
@@ -36,10 +26,16 @@ public class CommandsUtils {
 							return true;
 
 						try {
-							method.invoke(clazz.newInstance(), commandSender, s, strings);
+							if (method.getReturnType().equals(Boolean.TYPE)) {
+								return (boolean) (method.invoke(clazz.newInstance(), commandSender, s, strings));
+							} else {
+								method.invoke(clazz.newInstance(), commandSender, s, strings);
+								return false;
+							}
 						} catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
 							e.printStackTrace();
 						}
+
 						return false;
 					}
 				};
