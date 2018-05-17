@@ -5,8 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import tech.teslex.mpes.ll.LibLoader;
 import tech.teslex.pi.Main;
 import tech.teslex.pi.PiApi;
-import tech.teslex.pi.dependencies.Dependency;
-import tech.teslex.pi.dependencies.Type;
+import tech.teslex.pi.dependencies.PiDType;
+import tech.teslex.pi.dependencies.PiDependency;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,20 +17,21 @@ import java.util.List;
 
 public class DependenciesUtils {
 
-	public static List<Dependency> loadFromFile(File file) throws IOException {
+	public static List<PiDependency> loadFromFile(File file) throws IOException {
 		Gson gson = new Gson();
 		BufferedReader bf = new BufferedReader(new FileReader(file));
-		return gson.fromJson(bf, new TypeToken<List<Dependency>>() {
+		return gson.fromJson(bf, new TypeToken<List<PiDependency>>() {
 		}.getType());
 	}
 
-	public static void initOne(Dependency dependency) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		if (dependency.getType() == Type.PLUGIN) {
+	public static void initOne(PiDependency dependency) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		if (dependency.getType() == PiDType.PLUGIN) {
 			File pluginFile = new File(Main.it.getServer().getPluginPath() + File.separator);
 
 			Main.log.notice("Downloading " + dependency.getName() + " [Plugin]");
-			HTTPUtils.download(dependency.getUrl(), pluginFile.toPath());
-			pluginFile = HTTPUtils.download(dependency.getUrl(), pluginFile.toPath());
+			pluginFile = dependency.getFileName() != null ?
+					HTTPUtils.download(dependency.getUrl(), pluginFile.toPath(), dependency.getFileName()) :
+					HTTPUtils.download(dependency.getUrl(), pluginFile.toPath());
 
 			Main.it.getServer().getPluginManager().loadPlugin(pluginFile);
 
@@ -38,7 +39,9 @@ public class DependenciesUtils {
 			File libFile = new File(Main.it.getServer().getDataPath() + File.separator + "libraries");
 
 			Main.log.notice("Downloading " + dependency.getName() + " [Library]");
-			libFile = HTTPUtils.download(dependency.getUrl(), libFile.toPath());
+			libFile = dependency.getFileName() != null ?
+					HTTPUtils.download(dependency.getUrl(), libFile.toPath(), dependency.getFileName()) :
+					HTTPUtils.download(dependency.getUrl(), libFile.toPath());
 
 			File finalLibFile = libFile;
 			LibLoader.loadLib(() -> finalLibFile);
@@ -47,12 +50,15 @@ public class DependenciesUtils {
 	}
 
 	public static void initAll() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
-		for (Dependency dependency : PiApi.dependencies) {
+		for (PiDependency dependency : PiApi.getDependencies()) {
 
-			if (dependency.getType() == Type.PLUGIN && Main.it.getServer().getPluginManager().getPlugin(dependency.getName()) != null)
+			if (dependency.getType() == PiDType.PLUGIN && Main.it.getServer().getPluginManager().getPlugin(dependency.getName()) != null)
 				continue;
-			else if (dependency.getType() == Type.LIBRARY) {
-				String fileName = dependency.getUrl().substring(dependency.getUrl().lastIndexOf('/') + 1, dependency.getUrl().length());
+			else if (dependency.getType() == PiDType.LIBRARY) {
+				String fileName = dependency.getFileName() != null ? dependency.getFileName() : dependency.getUrl().substring(dependency.getUrl().lastIndexOf('/') + 1, dependency.getUrl().length());
+
+				Main.log.info(dependency.getFileName());
+
 				File x = new File(new File(Main.it.getServer().getDataPath() + File.separator + "libraries").getAbsoluteFile() + File.separator + fileName);
 
 				if (x.exists())

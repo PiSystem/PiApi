@@ -14,15 +14,18 @@ public class Main extends PluginBase {
 	public static PluginLogger log;
 
 	@Override
+	public void onLoad() {
+		saveResource("dependencies.json");
+	}
+
+	@Override
 	public void onEnable() {
 		it = this;
 		log = it.getLogger();
 
-		saveResource("dependencies.json");
-
 		try {
 			File file = new File(getServer().getPluginPath() + File.separator + "PiApi" + File.separator + "dependencies.json");
-			PiApi.dependencies = DependenciesUtils.loadFromFile(file);
+			PiApi.setDependencies(DependenciesUtils.loadFromFile(file));
 			DependenciesUtils.initAll();
 		} catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();

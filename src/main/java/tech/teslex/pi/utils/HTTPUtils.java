@@ -22,4 +22,15 @@ public class HTTPUtils {
 		}
 	}
 
+	public static File download(String url, Path to, String fileName) throws IOException {
+		URL xUrl = new URL(url);
+		try (InputStream in = xUrl.openStream()) {
+			File x = new File(to.toAbsolutePath().toFile().getAbsoluteFile() + File.separator + fileName);
+
+			Files.copy(in, x.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			return x;
+		}
+	}
+
 }
