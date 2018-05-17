@@ -3,7 +3,6 @@ package tech.teslex.pi.utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import tech.teslex.mpes.ll.LibLoader;
-import tech.teslex.pi.Main;
 import tech.teslex.pi.PiApi;
 import tech.teslex.pi.dependencies.PiDType;
 import tech.teslex.pi.dependencies.PiDependency;
@@ -26,19 +25,19 @@ public class DependenciesUtils {
 
 	public static void initOne(PiDependency dependency) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		if (dependency.getType() == PiDType.PLUGIN) {
-			File pluginFile = new File(Main.it.getServer().getPluginPath() + File.separator);
+			File pluginFile = new File(PiApi.it.getServer().getPluginPath() + File.separator);
 
-			Main.log.notice("Downloading " + dependency.getName() + " [Plugin]");
+			PiApi.log.notice("Downloading " + dependency.getName() + " [Plugin]");
 			pluginFile = dependency.getFileName() != null ?
 					HTTPUtils.download(dependency.getUrl(), pluginFile.toPath(), dependency.getFileName()) :
 					HTTPUtils.download(dependency.getUrl(), pluginFile.toPath());
 
-			Main.it.getServer().getPluginManager().loadPlugin(pluginFile);
+			PiApi.it.getServer().getPluginManager().loadPlugin(pluginFile);
 
 		} else {
-			File libFile = new File(Main.it.getServer().getDataPath() + File.separator + "libraries");
+			File libFile = new File(PiApi.it.getServer().getDataPath() + File.separator + "libraries");
 
-			Main.log.notice("Downloading " + dependency.getName() + " [Library]");
+			PiApi.log.notice("Downloading " + dependency.getName() + " [Library]");
 			libFile = dependency.getFileName() != null ?
 					HTTPUtils.download(dependency.getUrl(), libFile.toPath(), dependency.getFileName()) :
 					HTTPUtils.download(dependency.getUrl(), libFile.toPath());
@@ -52,14 +51,12 @@ public class DependenciesUtils {
 	public static void initAll() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
 		for (PiDependency dependency : PiApi.getDependencies()) {
 
-			if (dependency.getType() == PiDType.PLUGIN && Main.it.getServer().getPluginManager().getPlugin(dependency.getName()) != null)
+			if (dependency.getType() == PiDType.PLUGIN && PiApi.it.getServer().getPluginManager().getPlugin(dependency.getName()) != null)
 				continue;
 			else if (dependency.getType() == PiDType.LIBRARY) {
 				String fileName = dependency.getFileName() != null ? dependency.getFileName() : dependency.getUrl().substring(dependency.getUrl().lastIndexOf('/') + 1, dependency.getUrl().length());
 
-				Main.log.info(dependency.getFileName());
-
-				File x = new File(new File(Main.it.getServer().getDataPath() + File.separator + "libraries").getAbsoluteFile() + File.separator + fileName);
+				File x = new File(new File(PiApi.it.getServer().getDataPath() + File.separator + "libraries").getAbsoluteFile() + File.separator + fileName);
 
 				if (x.exists())
 					continue;

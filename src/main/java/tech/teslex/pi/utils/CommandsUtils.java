@@ -2,7 +2,7 @@ package tech.teslex.pi.utils;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import tech.teslex.pi.Main;
+import tech.teslex.pi.PiApi;
 import tech.teslex.pi.annotations.PiCommand;
 
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +40,7 @@ public class CommandsUtils {
 					}
 				};
 
-				Main.it.getServer().getCommandMap().register(command.command(), command1);
+				PiApi.it.getServer().getCommandMap().register(command.command(), command1);
 			}
 		}
 	}
