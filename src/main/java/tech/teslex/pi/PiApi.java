@@ -2,7 +2,10 @@ package tech.teslex.pi;
 
 import tech.teslex.pi.dependencies.PiDependency;
 import tech.teslex.pi.utils.CommandsUtils;
+import tech.teslex.pi.utils.DependenciesUtils;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,5 +25,10 @@ public class PiApi {
 
 	static void setDependencies(List<PiDependency> dependencies) {
 		PiApi.dependencies = dependencies;
+	}
+
+	public static void requireDependency(PiDependency dependency) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
+		dependencies.add(dependency);
+		DependenciesUtils.initOne(dependency);
 	}
 }
