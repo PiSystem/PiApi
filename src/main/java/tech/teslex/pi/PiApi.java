@@ -39,7 +39,6 @@ public class PiApi extends PluginBase {
 		log = it.getLogger();
 
 		saveResource("dependencies.json");
-		saveResource("config.yml");
 	}
 
 	@Override
