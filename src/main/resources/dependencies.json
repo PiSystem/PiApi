@@ -7,6 +7,13 @@
 		"file_name": "{NAME}-{VERSION}.jar"
 	},
 	{
+		"name": "Apache Ivy",
+		"type": "lib",
+		"version": "2.2.0",
+		"url": "http://central.maven.org/maven2/org/apache/ivy/ivy/{VERSION}/ivy-{VERSION}.jar",
+		"file_name": "{NAME}-{VERSION}.jar"
+	},
+	{
 		"name": "Groovy",
 		"type": "lib",
 		"version": "3.0.0-alpha-1",

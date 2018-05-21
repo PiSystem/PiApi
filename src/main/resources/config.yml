@@ -1,0 +1,10 @@
+#TODO: make it more secure
+
+scripts:
+  enable: true
+  load_from_folder: true
+  ask:
+    anywhere: true
+    on_enable_plugin: true
+    on_command: true
+  accepted_anyway: [example]

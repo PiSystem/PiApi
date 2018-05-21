@@ -35,24 +35,22 @@ PiApi.requireDependency(jwt);
 ```
 
 
-#### Use Groovy:
+#### Groovy scripts:
+*create file "example.groovy" on "scripts" folder*
 ```groovy
-import cn.nukkit.command.Command
-import cn.nukkit.command.CommandSender
-import cn.nukkit.plugin.PluginBase
-import tech.teslex.pi.PiApi
-import tech.teslex.pi.annotations.PiCommand
+import cn.nukkit.Server
+import groovy.transform.Field
 
-class MyGroovyPlugin extends PluginBase {
+@Field
+autostart = true // optional, default true
 
-	@Override
-	void onEnable() {
-		PiApi.registerCommands(this.class)
-	}
+someVar = "i'm a string"
 
-	@PiCommand(command = "echo")
-	void echo(CommandSender sender, String s, String[] args) {
-		sender.sendMessage("Echo: ${args.join(" ")}")
-	}
-}
+server = Server.getInstance()
+
+server.getLogger().info(someVar)
+server.getLogger().info("Server motd: ${server.motd}")
+
+// ... etc.
+
 ```

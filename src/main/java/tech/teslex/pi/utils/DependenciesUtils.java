@@ -1,5 +1,6 @@
 package tech.teslex.pi.utils;
 
+import cn.nukkit.plugin.Plugin;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import tech.teslex.mpes.ll.LibLoader;
@@ -44,8 +45,8 @@ public class DependenciesUtils {
 					HTTPUtils.download(dependency.getUrl(), pluginFile.toPath(), dependency.getFileName()) :
 					HTTPUtils.download(dependency.getUrl(), pluginFile.toPath());
 
-			PiApi.it.getServer().getPluginManager().loadPlugin(pluginFile);
-
+			Plugin loadedPlugin = PiApi.it.getServer().getPluginManager().loadPlugin(pluginFile);
+			PiApi.it.getServer().getPluginManager().enablePlugin(loadedPlugin);
 		} else {
 			File libFile = new File(PiApi.it.getServer().getDataPath() + File.separator + "libraries");
 

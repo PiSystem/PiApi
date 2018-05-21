@@ -5,6 +5,7 @@ import cn.nukkit.plugin.PluginLogger;
 import tech.teslex.pi.dependencies.PiDependency;
 import tech.teslex.pi.utils.CommandsUtils;
 import tech.teslex.pi.utils.DependenciesUtils;
+import tech.teslex.pi.utils.ScriptsUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class PiApi extends PluginBase {
 
-	public static final String VERSION = "0.0.1";
+	public static final String VERSION = "0.0.2";
 	public static PiApi it;
 	public static PluginLogger log;
 	private static List<PiDependency> dependencies = new ArrayList<>();
@@ -34,13 +35,15 @@ public class PiApi extends PluginBase {
 
 	@Override
 	public void onLoad() {
+		it = this;
+		log = it.getLogger();
+
 		saveResource("dependencies.json");
+		saveResource("config.yml");
 	}
 
 	@Override
 	public void onEnable() {
-		it = this;
-		log = it.getLogger();
 
 		try {
 			File file = new File(getServer().getPluginPath() + File.separator + "PiApi" + File.separator + "dependencies.json");
@@ -49,5 +52,15 @@ public class PiApi extends PluginBase {
 		} catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
+
+		try {
+			File scriptsDir = new File(getServer().getDataPath() + (File.separator + "scripts"));
+			scriptsDir.mkdirs();
+			ScriptsUtils.evalAllInDir(scriptsDir);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		registerCommands(ScriptsUtils.class);
 	}
 }
