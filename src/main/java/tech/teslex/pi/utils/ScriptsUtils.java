@@ -3,6 +3,7 @@ package tech.teslex.pi.utils;
 import cn.nukkit.command.CommandSender;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import org.codehaus.groovy.runtime.metaclass.MissingPropertyExceptionNoStack;
 import tech.teslex.pi.PiApi;
 import tech.teslex.pi.annotations.PiCommand;
 
@@ -19,8 +20,14 @@ public class ScriptsUtils {
 
 		Script script = groovyShell.parse(fileScript);
 
-		boolean isAutostart = (Boolean.valueOf(script.getProperty("autostart").toString()) ||
-				script.getProperty("autostart") == null);
+		boolean isAutostart = false;
+
+		try {
+			isAutostart = (Boolean.valueOf(script.getProperty("autostart").toString()) ||
+					script.getProperty("autostart") == null);
+		} catch (MissingPropertyExceptionNoStack exceptionNoStack) {
+			isAutostart = true;
+		}
 
 		if (isAutostart) {
 			PiApi.log.warning("Executing script: " + fileScript.getName());
@@ -35,8 +42,14 @@ public class ScriptsUtils {
 
 		Script script = groovyShell.parse(uriScript);
 
-		boolean isAutostart = (Boolean.valueOf(script.getProperty("autostart").toString()) ||
-				script.getProperty("autostart") == null);
+		boolean isAutostart = false;
+
+		try {
+			isAutostart = (Boolean.valueOf(script.getProperty("autostart").toString()) ||
+					script.getProperty("autostart") == null);
+		} catch (MissingPropertyExceptionNoStack exceptionNoStack) {
+			isAutostart = true;
+		}
 
 		if (isAutostart) {
 			PiApi.log.warning("Executing script: " + uriScript.getPath());
@@ -51,8 +64,14 @@ public class ScriptsUtils {
 
 		Script script = groovyShell.parse(textScript);
 
-		boolean isAutostart = (Boolean.valueOf(script.getProperty("autostart").toString()) ||
-				script.getProperty("autostart") == null);
+		boolean isAutostart = false;
+
+		try {
+			isAutostart = (Boolean.valueOf(script.getProperty("autostart").toString()) ||
+					script.getProperty("autostart") == null);
+		} catch (MissingPropertyExceptionNoStack exceptionNoStack) {
+			isAutostart = true;
+		}
 
 		if (isAutostart) {
 			PiApi.log.warning("Executing script from text");
