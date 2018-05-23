@@ -6,13 +6,11 @@
 import cn.nukkit.command.CommandSender;
 import tech.teslex.pi.annotations.PiCommand;
 
-class Commands { 
-	
+class Commands {
 	@PiCommand(command = "test", description = "test command", usage = "usage test", aliases = {"text"}, permissions = {"testplugin.test.use"})
-        public void test(CommandSender commandSender, String s, String[] args) {
-            commandSender.sendMessage("test response");
-        }
-        
+	public void test(CommandSender commandSender, String s, String[] args) {
+		commandSender.sendMessage("test response");
+	}
 }
 ```
 And register the class:
@@ -46,11 +44,37 @@ autostart = true // optional, default true
 
 someVar = "i'm a string"
 
-server = Server.getInstance()
+server = Server.instance
 
-server.getLogger().info(someVar)
-server.getLogger().info("Server motd: ${server.motd}")
+server.logger.info(someVar)
+server.logger.info("Server motd: ${server.motd}")
 
 // ... etc.
+
+```
+
+**Registering events:**
+
+```groovy
+import cn.nukkit.event.player.PlayerJoinEvent
+import cn.nukkit.event.player.PlayerMoveEvent
+import tech.teslex.pi.PiApi
+import tech.teslex.pi.annotations.PiOn
+
+@PiOn
+void onJoin(PlayerJoinEvent e) {
+	e.player.sendMessage "§eHey, bro!"
+}
+
+@PiOn
+void onMove(PlayerMoveEvent e) {
+	def x = e.player.x as int
+	def y = e.player.y as int
+	def z = e.player.z as int
+
+	e.player.sendPopup "§e${x} : §a${y} : §c${z}"
+}
+
+PiApi.registerEvents(this.class)
 
 ```

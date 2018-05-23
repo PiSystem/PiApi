@@ -5,6 +5,7 @@ import cn.nukkit.plugin.PluginLogger;
 import tech.teslex.pi.dependencies.PiDependency;
 import tech.teslex.pi.utils.CommandsUtils;
 import tech.teslex.pi.utils.DependenciesUtils;
+import tech.teslex.pi.utils.EventsUtils;
 import tech.teslex.pi.utils.ScriptsUtils;
 
 import java.io.File;
@@ -15,13 +16,17 @@ import java.util.List;
 
 public class PiApi extends PluginBase {
 
-	public static final String VERSION = "0.0.2";
+	public static final String VERSION = "0.0.3";
 	public static PiApi it;
 	public static PluginLogger log;
 	private static List<PiDependency> dependencies = new ArrayList<>();
 
 	public static void registerCommands(Class clazz) {
 		CommandsUtils.init(clazz);
+	}
+
+	public static void registerEvents(Class clazz) {
+		EventsUtils.init(clazz);
 	}
 
 	public static List<PiDependency> getDependencies() {
@@ -43,7 +48,6 @@ public class PiApi extends PluginBase {
 
 	@Override
 	public void onEnable() {
-
 		try {
 			File file = new File(getServer().getPluginPath() + File.separator + "PiApi" + File.separator + "dependencies.json");
 			PiApi.dependencies = (DependenciesUtils.loadJsonFromFile(file));
